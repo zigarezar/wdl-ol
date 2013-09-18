@@ -4,6 +4,7 @@
 
 #include "IPlugBase.h"
 #include <CoreServices/CoreServices.h>
+#include <CoreMIDI/MIDIServices.h>
 #include <AudioUnit/AUComponent.h>
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -95,6 +96,7 @@ private:
   WDL_TypedBuf<AudioSampleType> mInScratchBuf, mOutScratchBuf;
   WDL_PtrList<AURenderCallbackStruct> mRenderNotify;
   AUMIDIOutputCallbackStruct mMidiCallback;
+  MIDIPacketList mMIDIPacketList;
 
   // Every stereo pair of plugin input or output is a bus.
   // Buses can have zero host channels if the host hasn't connected the bus at all,
