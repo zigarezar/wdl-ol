@@ -1832,9 +1832,27 @@ ComponentResult IPlugAU::RenderProc(void* pPlug, AudioUnitRenderActionFlags* pFl
     }
   }
   
-  if(_this->mMidiCallback.midiOutputCallback)
+#pragma mark MIDIOUT
+  if(_this->mMidiCallback.midiOutputCallback && !_this->mMidiOutputQueue.Empty() | _this->mSysexOutputQueue.Available())
   {
-    _this->mMidiCallback.midiOutputCallback(_this->mMidiCallback.userData, pTimestamp, 0, &_this->mMIDIPacketList);
+    MIDIPacketList packetList;
+    MIDIPacket *packet = MIDIPacketListInit( &packetList );
+    
+    while (!_this->mMidiOutputQueue.Empty())
+    {
+      IMidiMsg* pMsg = _this->mMidiOutputQueue.Peek();
+      
+      packet = MIDIPacketListAdd( &packetList, sizeof(packetList), packet, pMsg->mOffset /* correct timestamp? */, 3, (const Byte *) &pMsg->mStatus );
+
+      _this->mMidiOutputQueue.Remove();
+    }
+    
+//    while (_this->mSysexOutputQueue.Available()) 
+//    {
+//      ISysEx* pSysex = _this->mSysexOutputQueue.Get(
+//    }
+
+    _this->mMidiCallback.midiOutputCallback(_this->mMidiCallback.userData, pTimestamp, 0, &packetList);
   }  
 
   return noErr;
@@ -2185,6 +2203,7 @@ void IPlugAU::SetBlockSize(int blockSize)
   mOutScratchBuf.Resize(nOut);
   memset(mInScratchBuf.Get(), 0, nIn * sizeof(AudioSampleType));
   memset(mOutScratchBuf.Get(), 0, nOut * sizeof(AudioSampleType));
+  mMidiOutputQueue.Resize(blockSize);
   IPlugBase::SetBlockSize(blockSize);
 }
 
@@ -2225,13 +2244,19 @@ bool IPlugAU::SendMidiMsg(IMidiMsg* pMsg)
 {
   if(mMidiCallback.midiOutputCallback)
   {
-    mMIDIPacketList.numPackets = 1;
-    mMIDIPacketList.packet->length = 3;
-    mMIDIPacketList.packet->timeStamp = 0; // probably not correct
-    mMIDIPacketList.packet->data[0] = pMsg->mStatus;
-    mMIDIPacketList.packet->data[1] = pMsg->mData1;
-    mMIDIPacketList.packet->data[2] = pMsg->mData2;
-  }                
+    mMidiOutputQueue.Add(pMsg);
+    return true;
+  }
 
+  return false;
+}
+
+bool IPlugAU::SendSysEx(ISysEx* pSysEx)
+{
+//  if(mMidiCallback.midiOutputCallback)
+//  {
+//    return true;
+//  }
+//  
   return false;
 }
