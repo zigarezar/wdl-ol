@@ -135,10 +135,71 @@ def dirwalk(dir, searchproject, replaceproject, searchman, replaceman):
     else:
       yield f, fullpath
 
-def main():
-  global VERSION
+def main(input, output, manufacturer):
   print "\nIPlug Project Duplicator v" + VERSION + " by Oli Larkin ------------------------------\n"
+  if ' ' in input:
+    print "error: input project name has spaces",
+    sys.exit(1)
+    
+  if ' ' in output:
+    print "error: output project name has spaces",
+    sys.exit(1)
   
+  if ' ' in manufacturer:
+    print "error: manufacturer name has spaces",
+    sys.exit(1)
+  
+  # remove a trailing slash if it exists
+  if input[-1:] == "/":
+    input = input[0:-1]
+  
+  if output[-1:] == "/":
+    output = output[0:-1]
+    
+  #check that the folders are OK
+  if os.path.isdir(input) == False:
+    print "error: input project not found",
+    sys.exit(1)
+      
+  if os.path.isdir(output):
+    print "error: output folder allready exists",
+    sys.exit(1)
+  # rmtree(output)
+      
+  print "copying " + input + " folder to " + output
+  copytree(input, output, ignore=ignore_patterns('*.exe', '*.dmg', '*.pkg', '*.mpkg', '*.svn', '*.ncb', '*.suo', '*sdf', 'ipch', 'build-*', '*.layout', '*.depend', '.DS_Store', '*xcuserdata*' ))
+  cpath = os.path.join(os.getcwd(), output)
+
+  #replace manufacturer name strings
+  for dir in dirwalk(cpath, input, output, "AcmeInc", manufacturer):
+    pass
+  
+  #xcuserfile = output + "/" + output + ".xcodeproj/oli.pbxuser"
+  #vsuserfile = + output + "/" + output + ".vcxproj.user
+  
+  #ans = raw_input("import default debug setups? y/n ...")
+
+  #if ans == "y":
+  # print "\n renaming the file " + xcuserfile
+  # osxun = raw_input("enter your osx username ...")
+  # if ' ' in osxun:
+  #   print "error: spaces in user name"
+  #   sys.exit(1)
+  # else:
+  #   nxcuserfile = xcuserfile.replace("wdlce", osxun);
+  #   os.rename(xcuserfile, nxcuserfile)
+    
+  #elif ans == "n":
+  # print "\n not renaming the file " + xcuserfile + " debugging setup will be lost"
+  # #print "\n not renaming the file " + vsuserfile
+  
+  print "\ncopying gitignore template into project folder"
+
+  copy('gitignore_template', output + "/.gitignore")
+
+  print "\ndone - don't forget to change PLUG_UNIQUE_ID and PLUG_MFR_ID in resource.h"
+  
+if __name__ == '__main__':  
   if len(sys.argv) != 4:
     print "Usage: duplicate.py inputprojectname outputprojectname [manufacturername]",
     sys.exit(1)
@@ -146,68 +207,4 @@ def main():
     input=sys.argv[1]
     output=sys.argv[2]
     manufacturer=sys.argv[3]
-
-    if ' ' in input:
-      print "error: input project name has spaces",
-      sys.exit(1)
-      
-    if ' ' in output:
-      print "error: output project name has spaces",
-      sys.exit(1)
-    
-    if ' ' in manufacturer:
-      print "error: manufacturer name has spaces",
-      sys.exit(1)
-    
-    # remove a trailing slash if it exists
-    if input[-1:] == "/":
-      input = input[0:-1]
-    
-    if output[-1:] == "/":
-      output = output[0:-1]
-      
-    #check that the folders are OK
-    if os.path.isdir(input) == False:
-      print "error: input project not found",
-      sys.exit(1)
-        
-    if os.path.isdir(output):
-      print "error: output folder allready exists",
-      sys.exit(1)
-    # rmtree(output)
-        
-    print "copying " + input + " folder to " + output
-    copytree(input, output, ignore=ignore_patterns('*.exe', '*.dmg', '*.pkg', '*.mpkg', '*.svn', '*.ncb', '*.suo', '*sdf', 'ipch', 'build-*', '*.layout', '*.depend', '.DS_Store', '*xcuserdata*' ))
-    cpath = os.path.join(os.getcwd(), output)
-
-    #replace manufacturer name strings
-    for dir in dirwalk(cpath, input, output, "AcmeInc", manufacturer):
-      pass
-    
-    #xcuserfile = output + "/" + output + ".xcodeproj/oli.pbxuser"
-    #vsuserfile = + output + "/" + output + ".vcxproj.user
-    
-    #ans = raw_input("import default debug setups? y/n ...")
-
-    #if ans == "y":
-    # print "\n renaming the file " + xcuserfile
-    # osxun = raw_input("enter your osx username ...")
-    # if ' ' in osxun:
-    #   print "error: spaces in user name"
-    #   sys.exit(1)
-    # else:
-    #   nxcuserfile = xcuserfile.replace("wdlce", osxun);
-    #   os.rename(xcuserfile, nxcuserfile)
-      
-    #elif ans == "n":
-    # print "\n not renaming the file " + xcuserfile + " debugging setup will be lost"
-    # #print "\n not renaming the file " + vsuserfile
-    
-    print "\ncopying gitignore template into project folder"
-
-    copy('gitignore_template', output + "/.gitignore")
-
-    print "\ndone - don't forget to change PLUG_UNIQUE_ID and PLUG_MFR_ID in resource.h"
-    
-if __name__ == '__main__':
-  main()
+    main(input, output, manufacturer)
