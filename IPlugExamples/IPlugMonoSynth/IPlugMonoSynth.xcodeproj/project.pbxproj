@@ -1578,6 +1578,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0510;
 				BuildIndependentTargetsInParallel = YES;
 			};
 			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "IPlugMonoSynth" */;
@@ -2107,6 +2108,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = "$(BINARY_NAME)";
+				SYMROOT = "build-mac";
 				SDKROOT = "$(BASE_SDK)";
 				SKIP_INSTALL = NO;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -2154,6 +2156,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = "$(BINARY_NAME)";
+				SYMROOT = "build-mac";
 				SDKROOT = "$(BASE_SDK)";
 				SKIP_INSTALL = NO;
 				VALID_ARCHS = "i386 x86_64";
@@ -2524,11 +2527,13 @@
 					"$(IPLUG_PATH)",
 					"$(ADDITIONAL_INCLUDES)",
 					"$(inherited)",
+					"$(AAX_SDK)/Interfaces",
+					"$(AAX_SDK)/Interfaces/ACF",
 				);
 				INFOPLIST_FILE = "resources/IPlugMonoSynth-AAX-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(ADDITIONAL_LIBRARY_PATHS)",
-					"$(SRCROOT)/../../AAX_SDK/Libs/Debug",
+					"$(AAX_SDK)/Libs/Debug",
 				);
 				SDKROOT = "$(BASE_SDK)";
 				SKIP_INSTALL = NO;
@@ -2568,11 +2573,13 @@
 					"$(IPLUG_PATH)",
 					"$(ADDITIONAL_INCLUDES)",
 					"$(inherited)",
+					"$(AAX_SDK)/Interfaces",
+					"$(AAX_SDK)/Interfaces/ACF",
 				);
 				INFOPLIST_FILE = "resources/IPlugMonoSynth-AAX-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(ADDITIONAL_LIBRARY_PATHS)",
-					"$(SRCROOT)/../../AAX_SDK/Libs/Release",
+					"$(AAX_SDK)/Libs/Release",
 				);
 				PREBINDING = YES;
 				SDKROOT = "$(BASE_SDK)";
@@ -2613,11 +2620,13 @@
 					"$(IPLUG_PATH)",
 					"$(ADDITIONAL_INCLUDES)",
 					"$(inherited)",
+					"$(AAX_SDK)/Interfaces",
+					"$(AAX_SDK)/Interfaces/ACF",
 				);
 				INFOPLIST_FILE = "resources/IPlugMonoSynth-AAX-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(ADDITIONAL_LIBRARY_PATHS)",
-					"$(SRCROOT)/../../AAX_SDK/Libs/Release",
+					"$(AAX_SDK)/Libs/Release",
 				);
 				SDKROOT = "$(BASE_SDK)";
 				SKIP_INSTALL = NO;
@@ -2740,6 +2749,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = "$(BINARY_NAME)";
+				SYMROOT = "build-mac";
 				SDKROOT = "$(BASE_SDK)";
 				SKIP_INSTALL = NO;
 				VALID_ARCHS = "i386 x86_64";

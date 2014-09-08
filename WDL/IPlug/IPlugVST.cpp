@@ -310,6 +310,8 @@ void IPlugVST::HostSpecificInit()
       case kHostSAWStudio:
         LimitToStereoIO();
         break;
+      default:
+        break;
     }
 
     // This won't always solve a picky host problem -- for example Forte
@@ -740,6 +742,9 @@ VstIntPtr VSTCALLBACK IPlugVST::VSTDispatcher(AEffect *pEffect, VstInt32 opCode,
         }
       }
       return 0;
+    }
+    case effGetTailSize:
+      return _this->GetTailSize();
     }
     case effVendorSpecific:
     {

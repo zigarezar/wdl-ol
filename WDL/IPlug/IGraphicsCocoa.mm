@@ -1,5 +1,12 @@
 #include "IGraphicsCocoa.h"
 
+//forward declare this if compiling with 10.6 sdk
+#if !defined(MAC_OS_X_VERSION_10_7) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_7
+@interface NSScreen (LionSDK)
+- (CGFloat)backingScaleFactor;
+@end
+#endif // MAC_OS_X_VERSION_10_7
+
 @implementation IGRAPHICS_MENU_RCVR
 
 - (NSMenuItem*)MenuItem
@@ -16,7 +23,7 @@
 
 @implementation IGRAPHICS_NSMENU
 
-- (id)initWithIPopupMenuAndReciever:(IPopupMenu*)pMenu: (NSView*)pView
+- (id)initWithIPopupMenuAndReciever:(IPopupMenu*)pMenu : (NSView*)pView
 {
   [self initWithTitle: @""];
 
@@ -39,7 +46,7 @@
 
       switch (pMenu->GetPrefix())
       {
-        case 0: prefixString = [NSString stringWithFormat:@"", i+1]; break;
+        case 0: prefixString = [NSString stringWithUTF8String:""]; break;
         case 1: prefixString = [NSString stringWithFormat:@"%1d: ", i+1]; break;
         case 2: prefixString = [NSString stringWithFormat:@"%02d: ", i+1]; break;
         case 3: prefixString = [NSString stringWithFormat:@"%03d: ", i+1]; break;
@@ -461,6 +468,7 @@ inline int GetMouseOver(IGraphicsMac* pGraphics)
     mGraphics = 0;
     graphics->CloseWindow();
   }
+  [super removeFromSuperview];
 }
 
 - (void) controlTextDidEndEditing: (NSNotification*) aNotification
@@ -480,7 +488,7 @@ inline int GetMouseOver(IGraphicsMac* pGraphics)
   [self setNeedsDisplay: YES];
 }
 
-- (IPopupMenu*) createIPopupMenu: (IPopupMenu*) pMenu: (NSRect) rect;
+- (IPopupMenu*) createIPopupMenu: (IPopupMenu*) pMenu : (NSRect) rect;
 {
   IGRAPHICS_MENU_RCVR* dummyView = [[[IGRAPHICS_MENU_RCVR alloc] initWithFrame:rect] autorelease];
   NSMenu* nsMenu = [[[IGRAPHICS_NSMENU alloc] initWithIPopupMenuAndReciever:pMenu :dummyView] autorelease];
@@ -489,6 +497,14 @@ inline int GetMouseOver(IGraphicsMac* pGraphics)
 
   NSPoint wp = {rect.origin.x, rect.origin.y - 4};
   wp = [self convertPointToBase:wp];
+  
+  //fix position for retina display
+  float displayScale = 1.0f;
+  NSScreen* screen = [pWindow screen];
+  if ([screen respondsToSelector: @selector (backingScaleFactor)])
+    displayScale = screen.backingScaleFactor;
+  wp.x /= displayScale;
+  wp.y /= displayScale;
 
   NSEvent* event = [NSEvent otherEventWithType:NSApplicationDefined
                   location:wp
@@ -516,7 +532,7 @@ inline int GetMouseOver(IGraphicsMac* pGraphics)
   else return 0;
 }
 
-- (void) createTextEntry: (IControl*) pControl: (IParam*) pParam: (IText*) pText: (const char*) pString: (NSRect) areaRect;
+- (void) createTextEntry: (IControl*) pControl : (IParam*) pParam : (IText*) pText : (const char*) pString : (NSRect) areaRect;
 {
   if (!pControl || mTextFieldView) return;
 
@@ -576,7 +592,7 @@ inline int GetMouseOver(IGraphicsMac* pGraphics)
   [mTextFieldView setFocusRingType:NSFocusRingTypeNone];
 #endif
   
-#if __MAC_OS_X_VERSION_MAX_ALLOWED > 1060
+#if __MAC_OS_X_VERSION_MAX_ALLOWED > 1050
   [mTextFieldView setDelegate: (id<NSTextFieldDelegate>) self];
 #else
   [mTextFieldView setDelegate: self];

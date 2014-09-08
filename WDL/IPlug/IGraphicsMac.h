@@ -7,8 +7,7 @@
 
 // carbon support uses quickdraw methods that have been removed in SDKs > 10.6
 #if __MAC_OS_X_VERSION_MAX_ALLOWED > 1060
-  #define IPLUG_NO_CARBON_SUPPORT
-  #warning Carbon GUIs disabled when compiling against 10.7 or higher sdk
+  #warning Carbon GUIs work best with the 10.6 sdk
 #endif
 
 #include "IGraphics.h"
@@ -128,6 +127,9 @@ private:
 #ifndef IPLUG_NO_CARBON_SUPPORT
   friend class IGraphicsCarbon;
 #endif
+  
+  void *mColorSpace; // CGColorSpaceRef, created on demand and freed on destroy
+  WDL_HeapBuf mRetinaUpscaleBuf; // used for doubled-bitmap when drawing retina
   
 public: //TODO: make this private
   void* mHostNSWindow;

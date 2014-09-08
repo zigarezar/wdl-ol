@@ -461,12 +461,6 @@ void IPlugAAX::EndInformHostOfParamChange(int idx)
   ReleaseParameter(mParamIDs.Get(idx)->Get());
 }
 
-void IPlugAAX::SetParameterFromGUI(int idx, double normalizedValue)
-{
-  Trace(TRACELOC, "%d:%f", idx, normalizedValue);
-  InformHostOfParamChange(idx, normalizedValue);
-}
-
 int IPlugAAX::GetSamplePos()
 { 
   int64_t samplePos;
@@ -494,14 +488,14 @@ void IPlugAAX::GetTime(ITimeInfo* pTimeInfo)
   pTimeInfo->mDenominator = (int) denom;
   
   mTransport->GetCurrentTickPosition(&ppqPos);
-  pTimeInfo->mPPQPos = (double) ppqPos;
+  pTimeInfo->mPPQPos = (double) ppqPos / 960000.0;
   
   mTransport->GetCurrentNativeSampleLocation(&samplePos);
   pTimeInfo->mSamplePos = (double) samplePos;
   
   mTransport->GetCurrentLoopPosition(&pTimeInfo->mTransportLoopEnabled, &cStart, &cEnd);
-  pTimeInfo->mCycleStart = (double) cStart;
-  pTimeInfo->mCycleEnd = (double) cEnd;
+  pTimeInfo->mCycleStart = (double) cStart / 960000.0;
+  pTimeInfo->mCycleEnd = (double) cEnd / 960000.0;
   
   //pTimeInfo->mLastBar ??
 }
