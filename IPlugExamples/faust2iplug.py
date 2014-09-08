@@ -52,8 +52,6 @@ def faust2iplug(faustdsp, base, outputpath):
     if p[6] == "double":
       paramDeclStr = paramDeclStr + "  GetParam(kParam" + `idx` + ")->InitDouble(" + p[0] + "," + p[2] + "," + p[3] + "," + p[4] + "," + p[5] + ', "");\n'
     elif p[6] == "enum":
-      #InitEnum("L1 PEG End PT", 0, 7, "", group);
-      #void IParam::InitEnum(const char* name, int defaultVal, int nEnums, const char* label, const char* group)
       paramDeclStr = paramDeclStr + "  GetParam(kParam" + `idx` + ")->InitEnum(" + p[0] + "," + p[2] + "," + p[3] + "," + p[4] + "," + p[5] + ', "");\n'
 
     p[1] = p[1].lstrip(" &")
@@ -84,4 +82,4 @@ if __name__ == "__main__":
       else:
         print "error - not a faust dsp" 
    else:
-      print "error"
+      print "error wrong arguments"
