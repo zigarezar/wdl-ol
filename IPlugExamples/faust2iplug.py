@@ -82,4 +82,5 @@ if __name__ == "__main__":
       else:
         print "error - not a faust dsp" 
    else:
-      print "error wrong arguments"
+      print "Usage: faust2iplug.py faustdspname manufacturername",
+
