@@ -6,7 +6,7 @@
 // the basename of the vst, vst3, app, component, dpm, aaxplugin
 BINARY_NAME = IPlugFaust
 
-ADDITIONAL_INCLUDES = /usr/local/include/
+ADDITIONAL_INCLUDES = // $(SRCROOT)/../../../MyDSP/
 //ADDITIONAL_LIBRARY_PATHS = //
 
 // for jack headers
@@ -34,17 +34,17 @@ APP_DEFS = SA_API __MACOSX_CORE__ //__UNIX_JACK__
 
 IOS_DEFS = SA_API
 // Preprocessor definitions for all Debug builds
-DEBUG_DEFS = _DEBUG FAUSTFLOAT=double
+DEBUG_DEFS = _DEBUG
 
 // Preprocessor definitions for all Release builds
-RELEASE_DEFS = NDEBUG FAUSTFLOAT=double//DEMO_VERSION
+RELEASE_DEFS = NDEBUG //DEMO_VERSION
 
 // Preprocessor definitions for all Tracer builds
-TRACER_DEFS = TRACER_BUILD NDEBUG FAUSTFLOAT=double
+TRACER_DEFS = TRACER_BUILD NDEBUG
 
 // Preprocessor definitions for cocoa uniqueness (all builds)
 // If you want to use swell inside of iplug, you need to make SWELL_APP_PREFIX unique too
-COCOA_DEFS = COCOA_PREFIX=vIPlugFaust SWELL_APP_PREFIX=Swell_vIPlugFaust
+COCOA_DEFS = SWELL_CLEANUP_ON_UNLOAD COCOA_PREFIX=vIPlugFaust SWELL_APP_PREFIX=Swell_vIPlugFaust
 
 //------------------------------
 // Release build options

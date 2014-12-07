@@ -42,6 +42,7 @@ Source: "..\build-win\rtas\bin\IPlugFaust.dpm"; DestDir: "{cf32}\Digidesign\DAE\
 Source: "..\build-win\rtas\bin\IPlugFaust.dpm.rsr"; DestDir: "{cf32}\Digidesign\DAE\Plug-Ins\"; Components:rtas_32; Flags: ignoreversion;
 
 Source: "..\build-win\aax\bin\IPlugFaust.aaxplugin\*.*"; DestDir: "{cf32}\Avid\Audio\Plug-Ins\IPlugFaust.aaxplugin\"; Components:aax_32; Flags: ignoreversion recursesubdirs;
+Source: "..\build-win\aax\bin\IPlugFaust.aaxplugin\*.*"; DestDir: "{cf}\Avid\Audio\Plug-Ins\IPlugFaust.aaxplugin\"; Components:aax_64; Flags: ignoreversion recursesubdirs;
 
 Source: "..\manual\IPlugFaust_manual.pdf"; DestDir: "{app}"
 Source: "changelog.txt"; DestDir: "{app}"
