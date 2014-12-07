@@ -30,7 +30,7 @@ public:
   virtual void OnMouseUp(int x, int y, IMouseMod* pMod) {}
   virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod) {}
   virtual void OnMouseDblClick(int x, int y, IMouseMod* pMod);
-  virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, int d);
+  virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, int d) {};
   virtual bool OnKeyDown(int x, int y, int key) { return false; }
 
   // For efficiency, mouseovers/mouseouts are ignored unless you call IGraphics::HandleMouseOver.
@@ -117,6 +117,8 @@ public:
   virtual void SetAuxParamValueFromPlug(int auxParamIdx, double value); // can override if nessecary
   void SetAllAuxParamsFromGUI();
   int NAuxParams() { return mAuxParams.GetSize(); }
+  
+  IPlugBase* GetPlug() { return mPlug; }
   
 protected:
   int mTextEntryLength;
@@ -270,6 +272,7 @@ public:
 
   virtual void OnMouseDown(int x, int y, IMouseMod* pMod);
   virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
+  virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, int d);
 
   virtual bool Draw(IGraphics* pGraphics);
   
@@ -296,6 +299,7 @@ public:
 
   void SetGearing(double gearing) { mGearing = gearing; }
   virtual void OnMouseDrag(int x, int y, int dX, int dY, IMouseMod* pMod);
+  virtual void OnMouseWheel(int x, int y, IMouseMod* pMod, int d);
 
 protected:
   EDirection mDirection;
