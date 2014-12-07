@@ -1,7 +1,8 @@
 #include "IPlugFaust.h"
 #include "IPlug_include_in_plug_src.h"
-#include "IControl.h"
 #include "resource.h"
+#include "IAutoGUI.h"
+
 
 //FAUST_2_IPLUG_INCLUDE
 
@@ -31,6 +32,11 @@ IPlugFaust::IPlugFaust(IPlugInstanceInfo instanceInfo)
   //FAUST_IPLUG_PARAMDECL_START
   //FAUST_IPLUG_PARAMDECL_END
 
+  IGraphics* pGraphics = MakeGraphics(this, GUI_WIDTH, GUI_HEIGHT);
+  IText textProps(12, &COLOR_BLACK, "Verdana", IText::kStyleNormal, IText::kAlignNear, 0, IText::kQualityNonAntiAliased);
+  GenerateKnobGUI(pGraphics, this, &textProps, &COLOR_WHITE, &COLOR_BLACK, 60, 70);
+  AttachGraphics(pGraphics);
+  
   MakeDefaultPreset((char *) "-", kNumPrograms);
 }
 
