@@ -28,7 +28,7 @@ import fileinput, glob, string, sys, os, re, uuid
 from shutil import copy, copytree, ignore_patterns, rmtree
 from os.path import join
 
-VERSION = "0.9"
+VERSION = "0.91"
 
 # binary files that we don't want to do find and replace inside
 FILTERED_FILE_EXTENSIONS = [".ico",".icns", ".pdf", ".png", ".zip", ".exe", ".wav", ".aif"]
@@ -122,18 +122,8 @@ def dirwalk(dir, searchproject, replaceproject, searchman, replaceman):
     else:
       yield f, fullpath
 
-def main():
-  global VERSION
-  print("\nIPlug Project Duplicator v" + VERSION + " by Oli Larkin ------------------------------\n")
+def main(input, output, manufacturer):
   
-  if len(sys.argv) != 4:
-    print("Usage: duplicate.py inputprojectname outputprojectname [manufacturername]")
-    sys.exit(1)
-  else:
-    input=sys.argv[1]
-    output=sys.argv[2]
-    manufacturer=sys.argv[3]
-
     if ' ' in input:
       print("error: input project name has spaces")
       sys.exit(1)
@@ -178,4 +168,12 @@ def main():
     print("\ndone - don't forget to change PLUG_UID and MFR_UID in config.h")
     
 if __name__ == '__main__':
-  main()
+  print("\nIPlug Project Duplicator v" + VERSION + " by Oli Larkin ------------------------------\n")
+  if len(sys.argv) != 4:
+    print "Usage: duplicate.py inputprojectname outputprojectname [manufacturername]",
+    sys.exit(1)
+  else: # called from another script
+    input=sys.argv[1]
+    output=sys.argv[2]
+    manufacturer=sys.argv[3]
+    main(input, output, manufacturer)
