@@ -2,13 +2,14 @@
 
 #include "AAX_CBinaryTaperDelegate.h"
 #include "AAX_CBinaryDisplayDelegate.h"
-#include "AAX_CStringDisplayDelegate.h"
-#include "AAX_CLinearTaperDelegate.h"
+//#include "AAX_CStringDisplayDelegate.h"
+//#include "AAX_CLinearTaperDelegate.h"
 
 // custom taper for IParam::kTypeDouble
-#include "AAX/AAX_CIPlugTaperDelegate.h"
-#include "AAX_CNumberDisplayDelegate.h"
-#include "AAX_CUnitDisplayDelegateDecorator.h"
+//#include "AAX/AAX_CIPlugTaperDelegate.h"
+//#include "AAX_CNumberDisplayDelegate.h"
+//#include "AAX_CUnitDisplayDelegateDecorator.h"
+#include "AAX/AAX_CIPlugDelegates.h"
 
 AAX_CEffectParameters *AAX_CALLBACK IPlugAAX::Create()
 {
@@ -168,66 +169,77 @@ AAX_Result IPlugAAX::EffectInit()
     paramID->SetFormatted(32, "%i", i+kAAXParamIdxOffset);
     mParamIDs.Add(paramID);
     
-    switch (p->Type()) 
-    {
-      case IParam::kTypeDouble:
-      {
-        param = new AAX_CParameter<double>(paramID->Get(), 
-                                          AAX_CString(p->GetNameForHost()), 
-                                          p->GetDefault(), 
-                                          AAX_CIPlugTaperDelegate<double>(p->GetMin(), p->GetMax(), p->GetShape()),
-                                          AAX_CUnitDisplayDelegateDecorator<double>( AAX_CNumberDisplayDelegate<double>(), AAX_CString(p->GetLabelForHost())), 
-                                          p->GetCanAutomate());
-        
-        param->SetNumberOfSteps(128); // TODO: check this https://developer.digidesign.com/index.php?L1=5&L2=13&L3=56
-        param->SetType(AAX_eParameterType_Continuous);
-
-        break;
-      }
-      case IParam::kTypeInt:
-      {
-        param = new AAX_CParameter<int>(paramID->Get(), 
-                                        AAX_CString(p->GetNameForHost()), 
-                                        (int)p->GetDefault(), 
-                                        AAX_CLinearTaperDelegate<int>((int)p->GetMin(), (int)p->GetMax()), 
-                                        AAX_CUnitDisplayDelegateDecorator<int>( AAX_CNumberDisplayDelegate<int>(), AAX_CString(p->GetLabelForHost())), 
-                                        p->GetCanAutomate());
-        
-        param->SetNumberOfSteps(128);
-        param->SetType(AAX_eParameterType_Continuous);
-
-        break;
-      }
-      case IParam::kTypeEnum:
-      case IParam::kTypeBool: 
-      {
-        int nTexts = p->GetNDisplayTexts();
-        
-        std::map<int, AAX_CString> displayTexts;
-        
-        for (int j=0; j<p->GetNDisplayTexts(); j++) 
-        {
-          int value;
-          const char* text = p->GetDisplayTextAtIdx(j, &value);
-          
-          displayTexts.insert(std::pair<int, AAX_CString>(value, AAX_CString(text)) );
-        }
-        
-        param = new AAX_CParameter<int>(paramID->Get(), 
-                                        AAX_CString(p->GetNameForHost()), 
-                                        (int)p->GetDefault(), 
-                                        AAX_CLinearTaperDelegate<int>((int)p->GetMin(), (int)p->GetMax()), 
-                                        AAX_CStringDisplayDelegate<int>(displayTexts),
-                                        p->GetCanAutomate());
-        
-        param->SetNumberOfSteps(nTexts);
-        param->SetType(AAX_eParameterType_Discrete);
-                
-        break; 
-      }
-      default:
-        break;
-    }
+    param = new AAX_CParameter<double>(paramID->Get(),
+                                       AAX_CString(p->GetNameForHost()),
+                                       p->GetDefault(),
+                                       AAXWrapperTaperDelegate<double>(this, i),
+                                       AAXWrapperDisplayDelegate<double>(this, i),
+                                       p->GetCanAutomate());
+    
+    param->SetNumberOfSteps(55); // TODO: check
+    param->SetType(AAX_eParameterType_Continuous);
+    
+//    switch (p->Type())
+//    {
+//
+//      case IParam::kTypeDouble:
+//      {
+//        param = new AAX_CParameter<double>(paramID->Get(), 
+//                                          AAX_CString(p->GetNameForHost()), 
+//                                          p->GetDefault(), 
+//                                          AAX_CIPlugTaperDelegate<double>(p->GetMin(), p->GetMax(), p->GetShape()),
+//                                          AAX_CUnitDisplayDelegateDecorator<double>( AAX_CNumberDisplayDelegate<double>(), AAX_CString(p->GetLabelForHost())), 
+//                                          p->GetCanAutomate());
+//        
+//        param->SetNumberOfSteps(128); // TODO: check this https://developer.digidesign.com/index.php?L1=5&L2=13&L3=56
+//        param->SetType(AAX_eParameterType_Continuous);
+//
+//        break;
+//      }
+//      case IParam::kTypeInt:
+//      {
+//        param = new AAX_CParameter<int>(paramID->Get(), 
+//                                        AAX_CString(p->GetNameForHost()), 
+//                                        (int)p->GetDefault(), 
+//                                        AAX_CLinearTaperDelegate<int>((int)p->GetMin(), (int)p->GetMax()), 
+//                                        AAX_CUnitDisplayDelegateDecorator<int>( AAX_CNumberDisplayDelegate<int>(), AAX_CString(p->GetLabelForHost())), 
+//                                        p->GetCanAutomate());
+//        
+//        param->SetNumberOfSteps(128);
+//        param->SetType(AAX_eParameterType_Continuous);
+//
+//        break;
+//      }
+//      case IParam::kTypeEnum:
+//      case IParam::kTypeBool: 
+//      {
+//        int nTexts = p->GetNDisplayTexts();
+//        
+//        std::map<int, AAX_CString> displayTexts;
+//        
+//        for (int j=0; j<p->GetNDisplayTexts(); j++) 
+//        {
+//          int value;
+//          const char* text = p->GetDisplayTextAtIdx(j, &value);
+//          
+//          displayTexts.insert(std::pair<int, AAX_CString>(value, AAX_CString(text)) );
+//        }
+//        
+//        param = new AAX_CParameter<int>(paramID->Get(), 
+//                                        AAX_CString(p->GetNameForHost()), 
+//                                        (int)p->GetDefault(), 
+//                                        AAX_CLinearTaperDelegate<int>((int)p->GetMin(), (int)p->GetMax()), 
+//                                        AAX_CStringDisplayDelegate<int>(displayTexts),
+//                                        p->GetCanAutomate());
+//        
+//        param->SetNumberOfSteps(nTexts);
+//        param->SetType(AAX_eParameterType_Discrete);
+//                
+//        break; 
+//      }
+//      default:
+//        break;
+//    }
     
     mParameterManager.AddParameter(param);    
   }
